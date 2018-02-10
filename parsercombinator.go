@@ -17,7 +17,7 @@ type (
 
 	// NonTerminal is nonterminal symbol parser.
 	NonTerminal struct {
-		parsers []Parser
+		f CombineFunc
 	}
 
 	// RuleFunc is function validates parse rule.
@@ -25,6 +25,9 @@ type (
 
 	// CountFunc is function counts RuleFunc.
 	CountFunc func(string) (string, int, error)
+
+	// CombineFunc is function conbines parser.
+	CombineFunc func(string) (string, int, error)
 )
 
 // Once adapts parse rule once.
@@ -39,27 +42,46 @@ func (rf RuleFunc) Once() Parser {
 }
 
 // Parse executes parser
-func (t *Terminal) Parse(s string) (string, int, error) {
-	return t.f(s)
+func (t *Terminal) Parse(test string) (string, int, error) {
+	return t.f(test)
 }
 
 // Parse executes parser
-func (nt *NonTerminal) Parse(s string) (string, int, error) {
-	content := make([]byte, 0)
-	read := 0
-
-	for _, p := range nt.parsers {
-		str, num, err := p.Parse(s[read:])
-		if err != nil {
-			return "", 0, err
-		}
-		read += num
-		content = append(content, str...)
-	}
-	return string(content), read, nil
+func (nt *NonTerminal) Parse(test string) (string, int, error) {
+	return nt.f(test)
 }
 
 // Sequence combines Parsers
-func Sequence(args ...Parser) *NonTerminal {
-	return &NonTerminal{args}
+func Sequence(parsers ...Parser) *NonTerminal {
+	return &NonTerminal{func(test string) (string, int, error) {
+		content := make([]byte, 0)
+		read := 0
+
+		for _, p := range parsers {
+			str, num, err := p.Parse(test[read:])
+			if err != nil {
+				return "", 0, err
+			}
+			read += num
+			content = append(content, str...)
+		}
+		return string(content), read, nil
+	}}
+}
+
+// Or selects matched parse result
+func Or(p1, p2 Parser) *NonTerminal {
+	return &NonTerminal{func(test string) (string, int, error) {
+		str, num, err := p1.Parse(test)
+		if err == nil {
+			return str, num, err
+		}
+
+		str, num, err = p2.Parse(test)
+		if err == nil {
+			return str, num, err
+		}
+
+		return "", 0, errors.New("NonTerminal parse is failed")
+	}}
 }
