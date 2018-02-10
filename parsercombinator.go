@@ -53,6 +53,6 @@ func Or(p1, p2 *Parser) *Parser {
 			return str, num, err
 		}
 
-		return "", 0, errors.New("NonTerminal parse is failed")
+		return "", 0, errors.New("Or parse is failed")
 	}}
 }
