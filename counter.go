@@ -32,7 +32,7 @@ func (rf RuleFunc) AtLeastOnce() *Parser {
 	}}
 }
 
-// Many adapts parse rule 0 ore more times.
+// Many adapts parse rule 0 or more times.
 func (rf RuleFunc) Many() *Parser {
 	return &Parser{func(test string) (string, int, error) {
 		content := make([]byte, 0)
