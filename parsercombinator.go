@@ -32,10 +32,11 @@ type (
 // AnyChar reads a charater.
 func AnyChar() RuleFunc {
 	return func(test string) (string, int, bool) {
-		if utf8.RuneCountInString(test) >= 1 {
-			return test[:1], 1, true
+		if utf8.RuneCountInString(test) < 1 {
+			return "", 0, false
 		}
-		return "", 0, false
+
+		return test[:1], 1, true
 	}
 }
 
