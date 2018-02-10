@@ -82,7 +82,7 @@ func TestSequence(t *testing.T) {
 		}
 	}
 
-	// success
+	// fail
 	{
 		got, num, err := p.Parse("abc--def")
 		if err == nil {
