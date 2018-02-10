@@ -65,6 +65,30 @@ func TestString(t *testing.T) {
 	}
 }
 
+func TestDigit(t *testing.T) {
+	t.Parallel()
+
+	// success
+	{
+		got, num, err := Digit().Once().Parse("111aaa")
+		if err != nil || got != "1" || num != 1 {
+			t.Error(err, got, num)
+		}
+	}
+
+	// fail
+	{
+		got, num, err := Digit().Once().Parse("aaa")
+		if err == nil {
+			t.Error(got, num, err)
+		}
+		got, num, err = Digit().Once().Parse("")
+		if err == nil {
+			t.Error(got, num, err)
+		}
+	}
+}
+
 func TestSequence(t *testing.T) {
 	t.Parallel()
 
