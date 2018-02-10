@@ -44,3 +44,18 @@ func Digit() RuleFunc {
 		return "", 0, false
 	}
 }
+
+// Letter read a Letter.
+func Letter() RuleFunc {
+	return func(test string) (string, int, bool) {
+		if utf8.RuneCountInString(test) < 1 {
+			return "", 0, false
+		}
+
+		c := test[:1][0]
+		if unicode.IsLetter(rune(c)) {
+			return test[:1], 1, true
+		}
+		return "", 0, false
+	}
+}
