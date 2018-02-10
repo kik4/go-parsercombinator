@@ -46,3 +46,24 @@ func (rf RuleFunc) Many() *Parser {
 		return string(content), read, nil
 	}}
 }
+
+// Repeat adapts parse rule count times.
+func (rf RuleFunc) Repeat(count int) *Parser {
+	return &Parser{func(test string) (string, int, error) {
+		content := make([]byte, 0)
+		read := 0
+
+		for i := 0; i < count; i++ {
+			str, num, succeed := rf(test[read:])
+
+			if !succeed {
+				return "", 0, errors.New("Repeat is failed")
+			}
+
+			read += num
+			content = append(content, str...)
+		}
+
+		return string(content), read, nil
+	}}
+}
