@@ -78,18 +78,20 @@ func TestRepeat(t *testing.T) {
 	cases := []struct {
 		rule    RuleFunc
 		in      string
+		count   int
 		want1   string
 		want2   int
 		succeed bool
 	}{
-		{Letter(), "abc", "abc", 3, true},
-		{Letter(), "afa3ff", "afa", 3, true},
-		{Letter(), "3ff", "", 0, false},
-		{Letter(), "", "", 0, false},
-		{String("abc"), "abcabcabcd", "abcabcabc", 9, true},
+		{Letter(), "abc", 3, "abc", 3, true},
+		{Letter(), "afa3ff", 3, "afa", 3, true},
+		{Letter(), "3ff", 3, "", 0, false},
+		{Letter(), "", 3, "", 0, false},
+		{String("abc"), "abcabcabcd", 2, "abcabc", 6, true},
+		{Letter(), "abc", -3, "", 0, false},
 	}
 	for i, c := range cases {
-		got, num, err := c.rule.Repeat(3).Parse(c.in)
+		got, num, err := c.rule.Repeat(c.count).Parse(c.in)
 		if !(got == c.want1 && num == c.want2) || !(c.succeed == (err == nil)) {
 			t.Error(i, got, num, err, c)
 		}

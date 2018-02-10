@@ -50,6 +50,10 @@ func (rf RuleFunc) Many() *Parser {
 // Repeat adapts parse rule count times.
 func (rf RuleFunc) Repeat(count int) *Parser {
 	return &Parser{func(test string) (string, int, error) {
+		if count <= 0 {
+			return "", 0, errors.New("Repeat needs 1 or more times")
+		}
+
 		content := make([]byte, 0)
 		read := 0
 
