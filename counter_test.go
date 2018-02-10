@@ -38,6 +38,7 @@ func TestAtLeastOnce(t *testing.T) {
 		{Letter(), "afa3ff", "afa", 3, true},
 		{Letter(), "3ff", "", 0, false},
 		{Letter(), "", "", 0, false},
+		{String("abc"), "abcabcabcd", "abcabcabc", 9, true},
 	}
 	for i, c := range cases {
 		got, num, err := c.rule.AtLeastOnce().Parse(c.in)
@@ -61,6 +62,7 @@ func TestMany(t *testing.T) {
 		{Letter(), "afa3ff", "afa", 3, true},
 		{Letter(), "3ff", "", 0, true},
 		{Letter(), "", "", 0, true},
+		{String("abc"), "abcabcabcd", "abcabcabc", 9, true},
 	}
 	for i, c := range cases {
 		got, num, err := c.rule.Many().Parse(c.in)
