@@ -2,33 +2,43 @@ package parsercombinator
 
 import (
 	"testing"
-	"unicode/utf8"
 )
 
 func TestSequence(t *testing.T) {
 	t.Parallel()
 
 	p := Sequence(
+		func(args []interface{}) interface{} {
+			return args[1].(string)
+		},
 		String("abc").Once(),
 		AnyChar().Once(),
 		String("def").Once(),
 	)
 
-	// success
-	{
-		got, num, err := p.Parse("abc-def")
-		if err != nil || got != "abc-def" || num != utf8.RuneCountInString("abc-def") {
-			t.Error(err, got, num)
+	cases := []struct {
+		in      string
+		want1   interface{}
+		want2   int
+		succeed bool
+	}{
+		{"abc-def", "-", 7, true},
+		{"abc---def", nil, 0, false},
+	}
+	for i, c := range cases {
+		got, num, err := p.Parse(c.in)
+		if !(got == c.want1 && num == c.want2) || !(c.succeed == (err == nil)) {
+			t.Error(i, got, num, err, c)
 		}
 	}
 
-	// fail
-	{
-		got, num, err := p.Parse("abc--def")
-		if err == nil {
-			t.Error(err, got, num)
+	// test panic
+	defer func() {
+		if r := recover(); r == nil {
+			t.Errorf("The code did not panic")
 		}
-	}
+	}()
+	Sequence(nil, String("panic").Once()).Parse("panic")
 }
 
 func TestOr(t *testing.T) {

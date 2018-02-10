@@ -14,45 +14,52 @@ type (
 	RuleFunc func(string) (string, int, bool)
 
 	// ParseFunc is function parses.
-	ParseFunc func(string) (string, int, error)
+	ParseFunc func(string) (interface{}, int, error)
+
+	// SelectFunc is function selects new value.
+	SelectFunc func([]interface{}) interface{}
 )
 
 // Parse executes parser
-func (p *Parser) Parse(test string) (string, int, error) {
+func (p *Parser) Parse(test string) (interface{}, int, error) {
 	return p.f(test)
 }
 
 // Sequence combines Parsers
-func Sequence(parsers ...*Parser) *Parser {
-	return &Parser{func(test string) (string, int, error) {
-		content := make([]byte, 0)
+func Sequence(selector SelectFunc, parsers ...*Parser) *Parser {
+	if selector == nil {
+		panic("selector must need param")
+	}
+
+	return &Parser{func(test string) (interface{}, int, error) {
+		params := []interface{}{}
 		read := 0
 
 		for _, p := range parsers {
-			str, num, err := p.Parse(test[read:])
+			param, num, err := p.Parse(test[read:])
 			if err != nil {
-				return "", 0, err
+				return nil, 0, err
 			}
 			read += num
-			content = append(content, str...)
+			params = append(params, param)
 		}
-		return string(content), read, nil
+		return selector(params), read, nil
 	}}
 }
 
 // Or selects matched parse result
 func Or(p1, p2 *Parser) *Parser {
-	return &Parser{func(test string) (string, int, error) {
-		str, num, err := p1.Parse(test)
+	return &Parser{func(test string) (interface{}, int, error) {
+		val, num, err := p1.Parse(test)
 		if err == nil {
-			return str, num, err
+			return val, num, err
 		}
 
-		str, num, err = p2.Parse(test)
+		val, num, err = p2.Parse(test)
 		if err == nil {
-			return str, num, err
+			return val, num, err
 		}
 
-		return "", 0, errors.New("Or parse is failed")
+		return nil, 0, errors.New("Or parse is failed")
 	}}
 }
