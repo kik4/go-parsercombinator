@@ -17,17 +17,6 @@ type (
 	ParseFunc func(string) (string, int, error)
 )
 
-// Once adapts parse rule once.
-func (rf RuleFunc) Once() *Parser {
-	return &Parser{func(test string) (string, int, error) {
-		str, num, succeeded := rf(test)
-		if succeeded {
-			return str, num, nil
-		}
-		return "", 0, errors.New("once is failed")
-	}}
-}
-
 // Parse executes parser
 func (p *Parser) Parse(test string) (string, int, error) {
 	return p.f(test)
