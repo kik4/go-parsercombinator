@@ -21,7 +21,10 @@ type (
 // AnyChar reads a charater.
 func AnyChar() RuleFunc {
 	return func(test string) (string, int, bool) {
-		return test[:1], 1, true
+		if utf8.RuneCountInString(test) >= 1 {
+			return test[:1], 1, true
+		}
+		return "", 0, false
 	}
 }
 
@@ -29,6 +32,9 @@ func AnyChar() RuleFunc {
 func String(s string) RuleFunc {
 	return func(test string) (string, int, bool) {
 		num := utf8.RuneCountInString(s)
+		if utf8.RuneCountInString(test) < num {
+			return "", 0, false
+		}
 		if test[0:num] == s {
 			return test[0:num], num, true
 		}
