@@ -59,3 +59,18 @@ func Letter() RuleFunc {
 		return "", 0, false
 	}
 }
+
+// Char read a rune assigned
+func Char(r rune) RuleFunc {
+	return func(test string) (string, int, bool) {
+		if utf8.RuneCountInString(test) < 1 {
+			return "", 0, false
+		}
+
+		c := test[:1][0]
+		if rune(c) == r {
+			return test[:1], 1, true
+		}
+		return "", 0, false
+	}
+}
