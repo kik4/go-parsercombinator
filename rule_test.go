@@ -57,7 +57,7 @@ func TestDigit(t *testing.T) {
 		want3     bool
 	}{
 		{"000", "0", 1, true},
-		{"abc", "", 0, false},
+		{"テスト", "", 0, false},
 		{"", "", 0, false},
 	}
 	for i, c := range cases {
