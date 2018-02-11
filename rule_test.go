@@ -11,6 +11,9 @@ func TestAnyChar(t *testing.T) {
 		want3     bool
 	}{
 		{"abc", "a", 1, true},
+		{"߷ÁÁ", "߷", 2, true},
+		{"あいうえお", "あ", 3, true},
+		{"🍣", "🍣", 4, true},
 		{"", "", 0, false},
 	}
 	for i, c := range cases {

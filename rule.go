@@ -8,11 +8,11 @@ import (
 // AnyChar reads a charater.
 func AnyChar() RuleFunc {
 	return func(test string) (string, int, bool) {
-		if utf8.RuneCountInString(test) < 1 {
-			return "", 0, false
+		for _, r := range test {
+			str := string(r)
+			return str, len(str), true
 		}
-
-		return test[:1], 1, true
+		return "", 0, false
 	}
 }
 
