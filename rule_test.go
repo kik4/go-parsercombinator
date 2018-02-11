@@ -1,6 +1,8 @@
 package parsercombinator
 
-import "testing"
+import (
+	"testing"
+)
 
 func TestAnyChar(t *testing.T) {
 	t.Parallel()
@@ -77,6 +79,7 @@ func TestLetter(t *testing.T) {
 		want3     bool
 	}{
 		{"abc", "a", 1, true},
+		{"テスト", "テ", 3, true},
 		{"000", "", 0, false},
 		{"", "", 0, false},
 	}
