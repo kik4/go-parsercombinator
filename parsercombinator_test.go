@@ -8,19 +8,21 @@ import (
 func TestSequence(t *testing.T) {
 	t.Parallel()
 
+	parsers := []*Parser{
+		String("abc").Once(),
+		AnyChar().Once(),
+		String("def").Once(),
+	}
+
 	p1 := Sequence(
+		parsers,
 		func(args []interface{}) interface{} {
 			return args[1].(string)
 		},
-		String("abc").Once(),
-		AnyChar().Once(),
-		String("def").Once(),
 	)
 	p2 := Sequence(
+		parsers,
 		nil,
-		String("abc").Once(),
-		AnyChar().Once(),
-		String("def").Once(),
 	)
 
 	cases := []struct {

@@ -26,7 +26,7 @@ func (p *Parser) Parse(test string) (interface{}, int, error) {
 }
 
 // Sequence combines Parsers
-func Sequence(selector SelectFunc, parsers ...*Parser) *Parser {
+func Sequence(parsers []*Parser, selector SelectFunc) *Parser {
 	return &Parser{func(test string) (interface{}, int, error) {
 		params := []interface{}{}
 		read := 0
