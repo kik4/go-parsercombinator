@@ -27,10 +27,6 @@ func (p *Parser) Parse(test string) (interface{}, int, error) {
 
 // Sequence combines Parsers
 func Sequence(selector SelectFunc, parsers ...*Parser) *Parser {
-	if selector == nil {
-		panic("selector must need param")
-	}
-
 	return &Parser{func(test string) (interface{}, int, error) {
 		params := []interface{}{}
 		read := 0
@@ -43,6 +39,11 @@ func Sequence(selector SelectFunc, parsers ...*Parser) *Parser {
 			read += num
 			params = append(params, param)
 		}
+
+		if selector == nil {
+			return params, read, nil
+		}
+
 		return selector(params), read, nil
 	}}
 }
