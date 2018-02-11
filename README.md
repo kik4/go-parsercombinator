@@ -1,2 +1,2 @@
 # go-parsercombinator
-My parser combinator for golang
+Simple library for constructing parsers in Go code. (under development)
