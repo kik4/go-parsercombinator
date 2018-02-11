@@ -2,7 +2,6 @@ package parsercombinator
 
 import (
 	"unicode"
-	"unicode/utf8"
 )
 
 // AnyChar reads a charater.
@@ -59,15 +58,14 @@ func Letter() RuleFunc {
 }
 
 // Char read a rune assigned
-func Char(r rune) RuleFunc {
+func Char(needle rune) RuleFunc {
 	return func(test string) (string, int, bool) {
-		if utf8.RuneCountInString(test) < 1 {
-			return "", 0, false
-		}
-
-		c := test[:1][0]
-		if rune(c) == r {
-			return test[:1], 1, true
+		for _, r := range test {
+			if r != needle {
+				return "", 0, false
+			}
+			str := string(r)
+			return str, len(str), true
 		}
 		return "", 0, false
 	}

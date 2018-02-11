@@ -102,6 +102,8 @@ func TestChar(t *testing.T) {
 		want3 bool
 	}{
 		{"abc", 'a', "a", 1, true},
+		{"あいう", 'あ', "あ", 3, true},
+		{"あいう", 'い', "", 0, false},
 		{"", 'a', "", 0, false},
 	}
 	for i, c := range cases {
