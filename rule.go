@@ -17,14 +17,14 @@ func AnyChar() RuleFunc {
 }
 
 // String validates equal test stiring.
-func String(s string) RuleFunc {
+func String(needle string) RuleFunc {
 	return func(test string) (string, int, bool) {
-		num := utf8.RuneCountInString(s)
-		if utf8.RuneCountInString(test) < num {
+		length := len(needle)
+		if len(test) < length {
 			return "", 0, false
 		}
-		if test[0:num] == s {
-			return test[0:num], num, true
+		if test[:length] == needle {
+			return test[:length], length, true
 		}
 		return "", 0, false
 	}

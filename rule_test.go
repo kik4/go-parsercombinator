@@ -33,6 +33,9 @@ func TestString(t *testing.T) {
 		want3           bool
 	}{
 		{"abc", "abc", "abc", 3, true},
+		{"߷ÁÁ", "߷Á", "߷Á", 4, true},
+		{"あいうえおabc", "あいうえおa", "あいうえおa", 16, true},
+		{"🍺🍣🍺", "🍺🍣🍺", "🍺🍣🍺", 12, true},
 		{"long input", "abc", "", 0, false},
 		{"abc", "long test", "", 0, false},
 		{"", "", "", 0, true},
