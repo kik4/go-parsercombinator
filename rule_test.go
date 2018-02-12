@@ -159,6 +159,9 @@ func TestRules(t *testing.T) {
 		{In(unicode.Hiragana), "あ", true},
 		{In(unicode.Hiragana), "ア", false},
 		{In(unicode.Hiragana), "", false},
+		{InStr("あいうえお"), "あ", true},
+		{InStr("あいうえお"), "ア", false},
+		{InStr("あいうえお"), "", false},
 	}
 	for i, c := range cases {
 		got, num, succeed := c.rule(c.in)

@@ -109,6 +109,19 @@ func In(ranges ...*unicode.RangeTable) RuleFunc {
 	return createCommonRuleFunc(fn)
 }
 
+// InStr rune read in assgined string
+func InStr(table string) RuleFunc {
+	fn := func(r rune) bool {
+		for _, test := range table {
+			if r == test {
+				return true
+			}
+		}
+		return false
+	}
+	return createCommonRuleFunc(fn)
+}
+
 func createCommonRuleFunc(fn simpleIsFunc) RuleFunc {
 	return func(test string) (string, int, bool) {
 		for _, r := range test {
