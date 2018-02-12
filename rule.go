@@ -46,6 +46,61 @@ func Char(needle rune) RuleFunc {
 	return createCommonRuleFunc(fn)
 }
 
+// Control rune read
+func Control() RuleFunc {
+	return createCommonRuleFunc(unicode.IsControl)
+}
+
+// Graphic rune read
+func Graphic() RuleFunc {
+	return createCommonRuleFunc(unicode.IsGraphic)
+}
+
+// Lower rune read
+func Lower() RuleFunc {
+	return createCommonRuleFunc(unicode.IsLower)
+}
+
+// Mark rune read
+func Mark() RuleFunc {
+	return createCommonRuleFunc(unicode.IsMark)
+}
+
+// Number rune read
+func Number() RuleFunc {
+	return createCommonRuleFunc(unicode.IsNumber)
+}
+
+// Print rune read
+func Print() RuleFunc {
+	return createCommonRuleFunc(unicode.IsPrint)
+}
+
+// Punct rune read
+func Punct() RuleFunc {
+	return createCommonRuleFunc(unicode.IsPunct)
+}
+
+// Space rune read '\t', '\n', '\v', '\f', '\r', ' ', U+0085 (NEL), U+00A0 (NBSP).
+func Space() RuleFunc {
+	return createCommonRuleFunc(unicode.IsSpace)
+}
+
+// Symbol rune read
+func Symbol() RuleFunc {
+	return createCommonRuleFunc(unicode.IsSymbol)
+}
+
+// Title rune read
+func Title() RuleFunc {
+	return createCommonRuleFunc(unicode.IsTitle)
+}
+
+// Upper rune read
+func Upper() RuleFunc {
+	return createCommonRuleFunc(unicode.IsUpper)
+}
+
 func createCommonRuleFunc(fn simpleIsFunc) RuleFunc {
 	return func(test string) (string, int, bool) {
 		for _, r := range test {

@@ -113,3 +113,53 @@ func TestChar(t *testing.T) {
 		}
 	}
 }
+
+func TestRules(t *testing.T) {
+	t.Parallel()
+
+	cases := []struct {
+		rule RuleFunc
+		in   string
+		want bool
+	}{
+		{Control(), "\u0000", true},
+		{Control(), "あ", false},
+		{Control(), "", false},
+		{Graphic(), "あ", true},
+		{Graphic(), "\u0000", false},
+		{Graphic(), "", false},
+		{Lower(), "a", true},
+		{Lower(), "A", false},
+		{Lower(), "", false},
+		{Mark(), "꙰", true},
+		{Mark(), "A", false},
+		{Mark(), "", false},
+		{Number(), "1", true},
+		{Number(), "A", false},
+		{Number(), "", false},
+		{Print(), "1", true},
+		{Print(), "\u0000", false},
+		{Print(), "", false},
+		{Punct(), "-", true},
+		{Punct(), "A", false},
+		{Punct(), "", false},
+		{Space(), " ", true},
+		{Space(), "A", false},
+		{Space(), "", false},
+		{Symbol(), "¥", true},
+		{Symbol(), "A", false},
+		{Symbol(), "", false},
+		{Title(), "ǋ", true},
+		{Title(), "A", false},
+		{Title(), "", false},
+		{Upper(), "A", true},
+		{Upper(), "a", false},
+		{Upper(), "", false},
+	}
+	for i, c := range cases {
+		got, num, succeed := c.rule(c.in)
+		if succeed != c.want {
+			t.Error(i, got, num, succeed, c)
+		}
+	}
+}
