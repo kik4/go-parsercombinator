@@ -14,6 +14,20 @@ func AnyRune() RuneFunc {
 	return createCommonRuneFunc(fn)
 }
 
+// String validates equal test stiring.
+func String(needle string) RuneFunc {
+	return func(test string) (string, int, bool) {
+		length := len(needle)
+		if len(test) < length {
+			return "", 0, false
+		}
+		if test[:length] == needle {
+			return test[:length], length, true
+		}
+		return "", 0, false
+	}
+}
+
 // Digit read a digit.
 func Digit() RuneFunc {
 	return createCommonRuneFunc(unicode.IsDigit)
