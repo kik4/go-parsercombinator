@@ -9,9 +9,9 @@ func TestSequence(t *testing.T) {
 	t.Parallel()
 
 	parsers := []*Parser{
-		String("abc").Once(),
+		String("abc").Text().Once(),
 		AnyRune().Once(),
-		String("def").Once(),
+		String("def").Text().Once(),
 	}
 
 	p1 := Sequence(
@@ -26,9 +26,9 @@ func TestSequence(t *testing.T) {
 	)
 	p3 := Sequence(
 		[]*Parser{
-			String("テスト").Once(),
+			String("テスト").Text().Once(),
 			AnyRune().Once(),
-			String("🍣").Once(),
+			String("🍣").Text().Once(),
 			p1,
 		},
 		func(args []interface{}) interface{} {
