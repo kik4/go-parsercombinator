@@ -7,15 +7,15 @@ import (
 type runeValidationFunc func(rune) bool
 
 // AnyRune reads a rune.
-func AnyRune() RuleFunc {
+func AnyRune() RuneFunc {
 	fn := func(r rune) bool {
 		return true
 	}
-	return createCommonRuleFunc(fn)
+	return createCommonRuneFunc(fn)
 }
 
 // String validates equal test stiring.
-func String(needle string) RuleFunc {
+func String(needle string) RuneFunc {
 	return func(test string) (string, int, bool) {
 		length := len(needle)
 		if len(test) < length {
@@ -29,88 +29,88 @@ func String(needle string) RuleFunc {
 }
 
 // Digit read a digit.
-func Digit() RuleFunc {
-	return createCommonRuleFunc(unicode.IsDigit)
+func Digit() RuneFunc {
+	return createCommonRuneFunc(unicode.IsDigit)
 }
 
 // Letter read a Letter.
-func Letter() RuleFunc {
-	return createCommonRuleFunc(unicode.IsLetter)
+func Letter() RuneFunc {
+	return createCommonRuneFunc(unicode.IsLetter)
 }
 
 // Rune read a rune assigned
-func Rune(needle rune) RuleFunc {
+func Rune(needle rune) RuneFunc {
 	fn := func(r rune) bool {
 		return r == needle
 	}
-	return createCommonRuleFunc(fn)
+	return createCommonRuneFunc(fn)
 }
 
 // Control rune read
-func Control() RuleFunc {
-	return createCommonRuleFunc(unicode.IsControl)
+func Control() RuneFunc {
+	return createCommonRuneFunc(unicode.IsControl)
 }
 
 // Graphic rune read
-func Graphic() RuleFunc {
-	return createCommonRuleFunc(unicode.IsGraphic)
+func Graphic() RuneFunc {
+	return createCommonRuneFunc(unicode.IsGraphic)
 }
 
 // Lower rune read
-func Lower() RuleFunc {
-	return createCommonRuleFunc(unicode.IsLower)
+func Lower() RuneFunc {
+	return createCommonRuneFunc(unicode.IsLower)
 }
 
 // Mark rune read
-func Mark() RuleFunc {
-	return createCommonRuleFunc(unicode.IsMark)
+func Mark() RuneFunc {
+	return createCommonRuneFunc(unicode.IsMark)
 }
 
 // Number rune read
-func Number() RuleFunc {
-	return createCommonRuleFunc(unicode.IsNumber)
+func Number() RuneFunc {
+	return createCommonRuneFunc(unicode.IsNumber)
 }
 
 // Print rune read
-func Print() RuleFunc {
-	return createCommonRuleFunc(unicode.IsPrint)
+func Print() RuneFunc {
+	return createCommonRuneFunc(unicode.IsPrint)
 }
 
 // Punct rune read
-func Punct() RuleFunc {
-	return createCommonRuleFunc(unicode.IsPunct)
+func Punct() RuneFunc {
+	return createCommonRuneFunc(unicode.IsPunct)
 }
 
 // Space rune read '\t', '\n', '\v', '\f', '\r', ' ', U+0085 (NEL), U+00A0 (NBSP).
-func Space() RuleFunc {
-	return createCommonRuleFunc(unicode.IsSpace)
+func Space() RuneFunc {
+	return createCommonRuneFunc(unicode.IsSpace)
 }
 
 // Symbol rune read
-func Symbol() RuleFunc {
-	return createCommonRuleFunc(unicode.IsSymbol)
+func Symbol() RuneFunc {
+	return createCommonRuneFunc(unicode.IsSymbol)
 }
 
 // Title rune read
-func Title() RuleFunc {
-	return createCommonRuleFunc(unicode.IsTitle)
+func Title() RuneFunc {
+	return createCommonRuneFunc(unicode.IsTitle)
 }
 
 // Upper rune read
-func Upper() RuleFunc {
-	return createCommonRuleFunc(unicode.IsUpper)
+func Upper() RuneFunc {
+	return createCommonRuneFunc(unicode.IsUpper)
 }
 
 // In rune read
-func In(ranges ...*unicode.RangeTable) RuleFunc {
+func In(ranges ...*unicode.RangeTable) RuneFunc {
 	fn := func(r rune) bool {
 		return unicode.In(r, ranges...)
 	}
-	return createCommonRuleFunc(fn)
+	return createCommonRuneFunc(fn)
 }
 
 // InStr rune read in assgined string
-func InStr(table string) RuleFunc {
+func InStr(table string) RuneFunc {
 	fn := func(r rune) bool {
 		for _, test := range table {
 			if r == test {
@@ -119,10 +119,10 @@ func InStr(table string) RuleFunc {
 		}
 		return false
 	}
-	return createCommonRuleFunc(fn)
+	return createCommonRuneFunc(fn)
 }
 
-func createCommonRuleFunc(fn runeValidationFunc) RuleFunc {
+func createCommonRuneFunc(fn runeValidationFunc) RuneFunc {
 	return func(test string) (string, int, bool) {
 		for _, r := range test {
 			if !fn(r) {

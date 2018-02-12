@@ -6,7 +6,7 @@ func TestOnce(t *testing.T) {
 	t.Parallel()
 
 	cases := []struct {
-		rule    RuleFunc
+		rule    RuneFunc
 		in      string
 		want1   string
 		want2   int
@@ -28,7 +28,7 @@ func TestAtLeastOnce(t *testing.T) {
 	t.Parallel()
 
 	cases := []struct {
-		rule    RuleFunc
+		rule    RuneFunc
 		in      string
 		want1   string
 		want2   int
@@ -52,7 +52,7 @@ func TestMany(t *testing.T) {
 	t.Parallel()
 
 	cases := []struct {
-		rule    RuleFunc
+		rule    RuneFunc
 		in      string
 		want1   string
 		want2   int
@@ -76,7 +76,7 @@ func TestRepeat(t *testing.T) {
 	t.Parallel()
 
 	cases := []struct {
-		rule    RuleFunc
+		rule    RuneFunc
 		in      string
 		count   int
 		want1   string

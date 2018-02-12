@@ -119,7 +119,7 @@ func TestRules(t *testing.T) {
 	t.Parallel()
 
 	cases := []struct {
-		rule RuleFunc
+		rule RuneFunc
 		in   string
 		want bool
 	}{

@@ -10,8 +10,8 @@ type (
 		f ParseFunc
 	}
 
-	// RuleFunc is function validates parse rule.
-	RuleFunc func(string) (string, int, bool)
+	// RuneFunc is function validates parse rule.
+	RuneFunc func(string) (string, int, bool)
 
 	// ParseFunc is function parses.
 	ParseFunc func(string) (interface{}, int, error)

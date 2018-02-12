@@ -3,7 +3,7 @@ package parsercombinator
 import "errors"
 
 // Once adapts parse rule once.
-func (rf RuleFunc) Once() *Parser {
+func (rf RuneFunc) Once() *Parser {
 	return &Parser{func(test string) (interface{}, int, error) {
 		str, num, succeeded := rf(test)
 		if succeeded {
@@ -14,7 +14,7 @@ func (rf RuleFunc) Once() *Parser {
 }
 
 // AtLeastOnce adapts parse rule once or more.
-func (rf RuleFunc) AtLeastOnce() *Parser {
+func (rf RuneFunc) AtLeastOnce() *Parser {
 	return &Parser{func(test string) (interface{}, int, error) {
 		content := make([]byte, 0)
 		read := 0
@@ -33,7 +33,7 @@ func (rf RuleFunc) AtLeastOnce() *Parser {
 }
 
 // Many adapts parse rule 0 or more times.
-func (rf RuleFunc) Many() *Parser {
+func (rf RuneFunc) Many() *Parser {
 	return &Parser{func(test string) (interface{}, int, error) {
 		content := make([]byte, 0)
 		read := 0
@@ -48,7 +48,7 @@ func (rf RuleFunc) Many() *Parser {
 }
 
 // Repeat adapts parse rule count times.
-func (rf RuleFunc) Repeat(count int) *Parser {
+func (rf RuneFunc) Repeat(count int) *Parser {
 	return &Parser{func(test string) (interface{}, int, error) {
 		if count <= 0 {
 			return "", 0, errors.New("Repeat needs 1 or more times")
