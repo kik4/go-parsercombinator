@@ -134,3 +134,21 @@ func createCommonRuneFunc(fn runeValidationFunc) RuneFunc {
 		return "", 0, false
 	}
 }
+
+// String validates equal test stiring.
+func String(needle string) RuneFunc {
+	return func(test string) (string, int, bool) {
+		if len(test) < len(needle) {
+			return "", 0, false
+		}
+		runes := []rune(test)
+		i := 0
+		for _, r := range needle {
+			if i >= len(runes) || r != runes[i] {
+				return string(runes[:i]), len(string(runes[:i])), false
+			}
+			i++
+		}
+		return needle, len(needle), true
+	}
+}
