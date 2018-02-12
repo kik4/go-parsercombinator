@@ -4,7 +4,7 @@ import (
 	"unicode"
 )
 
-type simpleIsFunc func(rune) bool
+type runeValidationFunc func(rune) bool
 
 // AnyRune reads a rune.
 func AnyRune() RuleFunc {
@@ -122,7 +122,7 @@ func InStr(table string) RuleFunc {
 	return createCommonRuleFunc(fn)
 }
 
-func createCommonRuleFunc(fn simpleIsFunc) RuleFunc {
+func createCommonRuleFunc(fn runeValidationFunc) RuleFunc {
 	return func(test string) (string, int, bool) {
 		for _, r := range test {
 			if !fn(r) {
