@@ -6,8 +6,8 @@ import (
 
 type simpleIsFunc func(rune) bool
 
-// AnyChar reads a charater.
-func AnyChar() RuleFunc {
+// AnyRune reads a rune.
+func AnyRune() RuleFunc {
 	fn := func(r rune) bool {
 		return true
 	}
@@ -38,8 +38,8 @@ func Letter() RuleFunc {
 	return createCommonRuleFunc(unicode.IsLetter)
 }
 
-// Char read a rune assigned
-func Char(needle rune) RuleFunc {
+// Rune read a rune assigned
+func Rune(needle rune) RuleFunc {
 	fn := func(r rune) bool {
 		return r == needle
 	}

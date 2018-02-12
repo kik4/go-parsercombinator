@@ -4,7 +4,7 @@ import (
 	"testing"
 )
 
-func TestAnyChar(t *testing.T) {
+func TestAnyRune(t *testing.T) {
 	t.Parallel()
 
 	cases := []struct {
@@ -19,7 +19,7 @@ func TestAnyChar(t *testing.T) {
 		{"", "", 0, false},
 	}
 	for i, c := range cases {
-		got, num, succeed := AnyChar()(c.in)
+		got, num, succeed := AnyRune()(c.in)
 		if !(got == c.want1 && num == c.want2 && succeed == c.want3) {
 			t.Error(i, got, num, succeed, c)
 		}
@@ -91,7 +91,7 @@ func TestLetter(t *testing.T) {
 	}
 }
 
-func TestChar(t *testing.T) {
+func TestRune(t *testing.T) {
 	t.Parallel()
 
 	cases := []struct {
@@ -107,7 +107,7 @@ func TestChar(t *testing.T) {
 		{"", 'a', "", 0, false},
 	}
 	for i, c := range cases {
-		got, num, succeed := Char(c.test)(c.in)
+		got, num, succeed := Rune(c.test)(c.in)
 		if !(got == c.want1 && num == c.want2 && succeed == c.want3) {
 			t.Error(i, got, num, succeed, c)
 		}

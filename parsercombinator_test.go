@@ -10,7 +10,7 @@ func TestSequence(t *testing.T) {
 
 	parsers := []*Parser{
 		String("abc").Once(),
-		AnyChar().Once(),
+		AnyRune().Once(),
 		String("def").Once(),
 	}
 
@@ -27,7 +27,7 @@ func TestSequence(t *testing.T) {
 	p3 := Sequence(
 		[]*Parser{
 			String("テスト").Once(),
-			AnyChar().Once(),
+			AnyRune().Once(),
 			String("🍣").Once(),
 			p1,
 		},
@@ -61,7 +61,7 @@ func TestOr(t *testing.T) {
 
 	p := Or(
 		Digit().Once(),
-		AnyChar().Once(),
+		AnyRune().Once(),
 	)
 
 	// success
