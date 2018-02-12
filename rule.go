@@ -101,6 +101,14 @@ func Upper() RuleFunc {
 	return createCommonRuleFunc(unicode.IsUpper)
 }
 
+// In rune read
+func In(ranges ...*unicode.RangeTable) RuleFunc {
+	fn := func(r rune) bool {
+		return unicode.In(r, ranges...)
+	}
+	return createCommonRuleFunc(fn)
+}
+
 func createCommonRuleFunc(fn simpleIsFunc) RuleFunc {
 	return func(test string) (string, int, bool) {
 		for _, r := range test {

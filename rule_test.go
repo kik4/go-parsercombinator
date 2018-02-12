@@ -2,6 +2,7 @@ package parsercombinator
 
 import (
 	"testing"
+	"unicode"
 )
 
 func TestAnyRune(t *testing.T) {
@@ -155,6 +156,9 @@ func TestRules(t *testing.T) {
 		{Upper(), "A", true},
 		{Upper(), "a", false},
 		{Upper(), "", false},
+		{In(unicode.Hiragana), "あ", true},
+		{In(unicode.Hiragana), "ア", false},
+		{In(unicode.Hiragana), "", false},
 	}
 	for i, c := range cases {
 		got, num, succeed := c.rule(c.in)
