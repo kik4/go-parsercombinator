@@ -11,32 +11,32 @@ type (
 	}
 
 	// RuneFunc is function validates parse rule.
-	RuneFunc func(string) (string, int, bool)
+	RuneFunc func([]rune) (rune, int, bool)
 
 	// ParseFunc is function parses.
-	ParseFunc func(string) (interface{}, int, error)
+	ParseFunc func([]rune) (interface{}, int, error)
 
 	// SelectFunc is function selects new value.
 	SelectFunc func([]interface{}) interface{}
 )
 
 // Parse executes parser
-func (p *Parser) Parse(test string) (interface{}, int, error) {
-	return p.f(test)
+func (p *Parser) Parse(target string) (interface{}, int, error) {
+	return p.f([]rune(target))
 }
 
 // Sequence combines Parsers
 func Sequence(parsers []*Parser, selector SelectFunc) *Parser {
-	return &Parser{func(test string) (interface{}, int, error) {
+	return &Parser{func(test []rune) (interface{}, int, error) {
 		params := []interface{}{}
 		read := 0
 
 		for _, p := range parsers {
-			param, num, err := p.Parse(test[read:])
-			if err != nil {
-				return nil, 0, err
-			}
+			param, num, err := p.f(test[read:])
 			read += num
+			if err != nil {
+				return nil, read, err
+			}
 			params = append(params, param)
 		}
 
@@ -50,17 +50,17 @@ func Sequence(parsers []*Parser, selector SelectFunc) *Parser {
 
 // Or selects matched parse result
 func Or(p1, p2 *Parser) *Parser {
-	return &Parser{func(test string) (interface{}, int, error) {
-		val, num, err := p1.Parse(test)
+	return &Parser{func(test []rune) (interface{}, int, error) {
+		val, num, err := p1.f(test)
 		if err == nil {
 			return val, num, err
 		}
 
-		val, num, err = p2.Parse(test)
+		val, num, err = p2.f(test)
 		if err == nil {
 			return val, num, err
 		}
 
-		return nil, 0, errors.New("Or parse is failed")
+		return nil, num, errors.New("Or parse is failed")
 	}}
 }

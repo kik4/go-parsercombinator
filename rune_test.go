@@ -9,84 +9,21 @@ func TestAnyRune(t *testing.T) {
 	t.Parallel()
 
 	cases := []struct {
-		in, want1 string
-		want2     int
-		want3     bool
-	}{
-		{"abc", "a", 1, true},
-		{"߷ÁÁ", "߷", 2, true},
-		{"あいうえお", "あ", 3, true},
-		{"🍣", "🍣", 4, true},
-		{"", "", 0, false},
-	}
-	for i, c := range cases {
-		got, num, succeed := AnyRune()(c.in)
-		if !(got == c.want1 && num == c.want2 && succeed == c.want3) {
-			t.Error(i, got, num, succeed, c)
-		}
-	}
-}
-
-func TestDigit(t *testing.T) {
-	t.Parallel()
-
-	cases := []struct {
-		in, want1 string
-		want2     int
-		want3     bool
-	}{
-		{"000", "0", 1, true},
-		{"テスト", "", 0, false},
-		{"", "", 0, false},
-	}
-	for i, c := range cases {
-		got, num, succeed := Digit()(c.in)
-		if !(got == c.want1 && num == c.want2 && succeed == c.want3) {
-			t.Error(i, got, num, succeed, c)
-		}
-	}
-}
-
-func TestLetter(t *testing.T) {
-	t.Parallel()
-
-	cases := []struct {
-		in, want1 string
-		want2     int
-		want3     bool
-	}{
-		{"abc", "a", 1, true},
-		{"テスト", "テ", 3, true},
-		{"000", "", 0, false},
-		{"", "", 0, false},
-	}
-	for i, c := range cases {
-		got, num, succeed := Letter()(c.in)
-		if !(got == c.want1 && num == c.want2 && succeed == c.want3) {
-			t.Error(i, got, num, succeed, c)
-		}
-	}
-}
-
-func TestRune(t *testing.T) {
-	t.Parallel()
-
-	cases := []struct {
 		in    string
-		test  rune
-		want1 string
+		want1 rune
 		want2 int
 		want3 bool
 	}{
-		{"abc", 'a', "a", 1, true},
-		{"あいう", 'あ', "あ", 3, true},
-		{"あいう", 'い', "", 0, false},
-		{"", 'a', "", 0, false},
+		{"abc", 'a', 1, true},
+		{"߷ÁÁ", '߷', 1, true},
+		{"あいうえお", 'あ', 1, true},
+		{"🍣", '🍣', 1, true},
+		{"", 0, 0, false},
 	}
 	for i, c := range cases {
-		got, num, succeed := Rune(c.test)(c.in)
-		if !(got == c.want1 && num == c.want2 && succeed == c.want3) {
-			t.Error(i, got, num, succeed, c)
+		got, num, ok := AnyRune()([]rune(c.in))
+		if !(got == c.want1 && num == c.want2 && ok == c.want3) {
+			t.Error(i, got, num, ok, c)
 		}
 	}
 }
@@ -99,6 +36,14 @@ func TestRules(t *testing.T) {
 		in   string
 		want bool
 	}{
+		{Digit(), "000", true},
+		{Digit(), "テスト", false},
+		{Letter(), "abc", true},
+		{Letter(), "000", false},
+		{Rune('a'), "abc", true},
+		{Rune('あ'), "あいう", true},
+		{Rune('い'), "あいう", false},
+		{Rune('a'), "", false},
 		{Control(), "\u0000", true},
 		{Control(), "あ", false},
 		{Control(), "", false},
@@ -140,33 +85,8 @@ func TestRules(t *testing.T) {
 		{InStr("あいうえお"), "", false},
 	}
 	for i, c := range cases {
-		got, num, succeed := c.rule(c.in)
+		got, num, succeed := c.rule([]rune(c.in))
 		if succeed != c.want {
-			t.Error(i, got, num, succeed, c)
-		}
-	}
-}
-
-func TestString(t *testing.T) {
-	t.Parallel()
-
-	cases := []struct {
-		in, test, want1 string
-		want2           int
-		succeed         bool
-	}{
-		{"abc", "abc", "abc", 3, true},
-		{"߷ÁÁ", "߷Á", "߷Á", 4, true},
-		{"あいうえおabc", "あいうえおa", "あいうえおa", 16, true},
-		{"🍺🍣🍺", "🍺🍣🍺", "🍺🍣🍺", 12, true},
-		{"あいうえおabc", "あいうeoa", "あいう", 9, false},
-		{"long input", "abc", "", 0, false},
-		{"abc", "long test", "", 0, false},
-		{"", "", "", 0, true},
-	}
-	for i, c := range cases {
-		got, num, succeed := String(c.test)(c.in)
-		if !(got == c.want1 && num == c.want2) || !(c.succeed == succeed) {
 			t.Error(i, got, num, succeed, c)
 		}
 	}

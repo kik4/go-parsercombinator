@@ -1,31 +1,33 @@
 package parsercombinator
 
-import "errors"
+import (
+	"errors"
+)
 
 // Once adapts parse rule once.
 func (rf RuneFunc) Once() *Parser {
-	return &Parser{func(test string) (interface{}, int, error) {
-		str, num, succeeded := rf(test)
-		if succeeded {
-			return str, num, nil
+	return &Parser{func(test []rune) (interface{}, int, error) {
+		r, num, ok := rf(test)
+		if ok {
+			return string(r), num, nil
 		}
-		return "", 0, errors.New("once is failed")
+		return "", num, errors.New("Once is failed")
 	}}
 }
 
 // AtLeastOnce adapts parse rule once or more.
 func (rf RuneFunc) AtLeastOnce() *Parser {
-	return &Parser{func(test string) (interface{}, int, error) {
-		content := make([]byte, 0)
+	return &Parser{func(test []rune) (interface{}, int, error) {
+		content := []rune{}
 		read := 0
-		str, num, succeed := rf(test[read:])
-		for ; succeed; str, num, succeed = rf(test[read:]) {
+		r, num, ok := rf(test[read:])
+		for ; ok; r, num, ok = rf(test[read:]) {
 			read += num
-			content = append(content, str...)
+			content = append(content, r)
 		}
 
 		if read == 0 {
-			return "", 0, errors.New("AtLeastOnce is failed")
+			return "", num, errors.New("AtLeastOnce is failed")
 		}
 
 		return string(content), read, nil
@@ -34,13 +36,13 @@ func (rf RuneFunc) AtLeastOnce() *Parser {
 
 // Many adapts parse rule 0 or more times.
 func (rf RuneFunc) Many() *Parser {
-	return &Parser{func(test string) (interface{}, int, error) {
-		content := make([]byte, 0)
+	return &Parser{func(test []rune) (interface{}, int, error) {
+		content := []rune{}
 		read := 0
-		str, num, succeed := rf(test[read:])
-		for ; succeed; str, num, succeed = rf(test[read:]) {
+		r, num, ok := rf(test[read:])
+		for ; ok; r, num, ok = rf(test[read:]) {
 			read += num
-			content = append(content, str...)
+			content = append(content, r)
 		}
 
 		return string(content), read, nil
@@ -49,25 +51,40 @@ func (rf RuneFunc) Many() *Parser {
 
 // Repeat adapts parse rule count times.
 func (rf RuneFunc) Repeat(count int) *Parser {
-	return &Parser{func(test string) (interface{}, int, error) {
+	return &Parser{func(test []rune) (interface{}, int, error) {
 		if count <= 0 {
 			return "", 0, errors.New("Repeat needs 1 or more times")
 		}
 
-		content := make([]byte, 0)
+		content := []rune{}
 		read := 0
 
 		for i := 0; i < count; i++ {
-			str, num, succeed := rf(test[read:])
-
-			if !succeed {
-				return "", 0, errors.New("Repeat is failed")
+			r, num, ok := rf(test[read:])
+			if !ok {
+				return "", num, errors.New("Repeat is failed")
 			}
 
 			read += num
-			content = append(content, str...)
+			content = append(content, r)
 		}
 
 		return string(content), read, nil
+	}}
+}
+
+// String validates equal test stiring.
+func String(needle string) *Parser {
+	return &Parser{func(test []rune) (interface{}, int, error) {
+		content := []rune{}
+		read := 0
+		for _, r := range needle {
+			if read >= len(test) || r != test[read] {
+				return string(content), read, errors.New("String is failed")
+			}
+			read++
+			content = append(content, r)
+		}
+		return string(content), len(content), nil
 	}}
 }
