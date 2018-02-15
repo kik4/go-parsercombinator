@@ -37,6 +37,8 @@ func TestRules(t *testing.T) {
 		want bool
 	}{
 		{Digit(), "000", true},
+		{Digit(), "൧", true},
+		{Digit(), "１", true},
 		{Digit(), "テスト", false},
 		{Letter(), "abc", true},
 		{Letter(), "000", false},
@@ -85,9 +87,9 @@ func TestRules(t *testing.T) {
 		{InStr("あいうえお"), "", false},
 	}
 	for i, c := range cases {
-		got, num, succeed := c.rule([]rune(c.in))
-		if succeed != c.want {
-			t.Error(i, got, num, succeed, c)
+		got, num, ok := c.rule([]rune(c.in))
+		if ok != c.want {
+			t.Error(i, got, num, ok, c)
 		}
 	}
 }
