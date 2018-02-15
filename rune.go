@@ -14,6 +14,14 @@ func AnyRune() RuneFunc {
 	return createCommonRuneFunc(fn)
 }
 
+// Rune read a rune assigned
+func Rune(needle rune) RuneFunc {
+	fn := func(r rune) bool {
+		return r == needle
+	}
+	return createCommonRuneFunc(fn)
+}
+
 // Digit read a digit.
 func Digit() RuneFunc {
 	return createCommonRuneFunc(unicode.IsDigit)
@@ -22,14 +30,6 @@ func Digit() RuneFunc {
 // Letter read a Letter.
 func Letter() RuneFunc {
 	return createCommonRuneFunc(unicode.IsLetter)
-}
-
-// Rune read a rune assigned
-func Rune(needle rune) RuneFunc {
-	fn := func(r rune) bool {
-		return r == needle
-	}
-	return createCommonRuneFunc(fn)
 }
 
 // Control rune read
